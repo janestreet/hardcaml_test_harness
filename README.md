@@ -17,7 +17,7 @@ See `src/waves_config.mli` for the full up-to-date API.
 let waves_config = Waves_config.default
 
 (* Save waves to the current working directory of the test *)
-let waves_config = Waves_config.to_test_directory
+let waves_config = Waves_config.to_test_directory ()
 
 (* Save waves to a specified directory *)
 let waves_config = Waves_config.to_directory "/work/hardcaml/waves/"
@@ -25,13 +25,13 @@ let waves_config = Waves_config.to_directory "/work/hardcaml/waves/"
 (* Run the simulation for extra cycles after a failure, useful for capturing context when
    the test is terminated early due to an assertion failure *)
 let waves_config =
-   Waves_config.to_test_directory
+   Waves_config.to_test_directory ()
    |> Waves_config.with_extra_cycles_after_test ~n:10
 ;;
 
 (* Control the waveform file-format *)
 let waves_config =
-   Waves_config.to_test_directory
+   Waves_config.to_test_directory ()
    |> Waves_config.as_wavefile_format ~format:Waves_config.Wavefile_format.Vcd
 ;;
 ```

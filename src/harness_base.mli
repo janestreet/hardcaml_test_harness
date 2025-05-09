@@ -33,6 +33,6 @@ val run
            -> Cyclesim.Config.t
            -> Scope.t
            -> 'sim * Waveform.t option)
-     -> ('sim -> unit)
-     -> unit)
+     -> ('sim -> 'a)
+     -> 'a)
       with_test_config

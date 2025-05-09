@@ -66,7 +66,7 @@ let%expect_test "prefix test (with test name)" =
 let%expect_test "save here test" =
   Bench.run
     ~random_initial_state:`All
-    ~waves_config:Waves_config.to_test_directory
+    ~waves_config:(Waves_config.to_test_directory ())
     ~create
     (fun ~inputs ~outputs:_ sim ->
        inputs.a := Bits.zero 64;
@@ -80,7 +80,7 @@ module%test [@name "testing with no expect-test name provided"] _ = struct
   let%expect_test _ =
     Bench.run
       ~random_initial_state:`All
-      ~waves_config:Waves_config.to_test_directory
+      ~waves_config:(Waves_config.to_test_directory ())
       ~create
       (fun ~inputs ~outputs:_ sim ->
          inputs.a := Bits.zero 64;
@@ -97,7 +97,7 @@ let%test_unit "testing outside of an expect-test" =
   Bench.run
     ~here:test_here
     ~random_initial_state:`All
-    ~waves_config:Waves_config.to_test_directory
+    ~waves_config:(Waves_config.to_test_directory ())
     ~create
     (fun ~inputs ~outputs:_ sim ->
        inputs.a := Bits.zero 64;
@@ -114,7 +114,7 @@ let%expect_test "multiple tests with the same name shouldn't clobber each other"
   for _ = 1 to 5 do
     Bench.run
       ~random_initial_state:`All
-      ~waves_config:Waves_config.to_test_directory
+      ~waves_config:(Waves_config.to_test_directory ())
       ~create
       (fun ~inputs ~outputs:_ sim ->
          inputs.a := Bits.zero 64;
