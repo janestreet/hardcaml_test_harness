@@ -14,6 +14,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?handle_multiple_waveforms_with_same_test_name
     ?test_name
     ?print_waves_after_test
+    ?timeout
     ~create
     testbench
     =
@@ -31,7 +32,12 @@ module Make (I : Interface.S) (O : Interface.S) = struct
         let simulator = Sim.create ~config inst in
         Common.cyclesim_maybe_wrap_waves ~always_wrap_waveterm ~wave_mode simulator)
       (fun simulator ->
-        Step.run_until_finished ~simulator ~testbench:(fun _ -> testbench simulator) ())
+        Step.run_with_timeout
+          ?timeout
+          ~simulator
+          ~testbench:(fun _ -> testbench simulator)
+          ()
+        |> Option.value_exn ~here ~message:"This test harness timed out")
   ;;
 
   let run
@@ -42,6 +48,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?handle_multiple_waveforms_with_same_test_name
     ?test_name
     ?print_waves_after_test
+    ?timeout
     ~create
     testbench
     =
@@ -53,6 +60,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
       ?trace
       ?test_name
       ?print_waves_after_test
+      ?timeout
       ~create
       (fun simulator ->
          let inputs = Cyclesim.inputs simulator in

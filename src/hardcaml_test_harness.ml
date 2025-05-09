@@ -1,6 +1,4 @@
-module Common = Common
 module Cyclesim_harness = Cyclesim_harness
-module Harness_base = Harness_base
 module Step_harness = Step_harness
 module Step_harness_imperative = Step_harness_imperative
 module Wave_mode = Wave_mode

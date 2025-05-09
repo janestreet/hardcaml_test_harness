@@ -30,17 +30,21 @@ type t =
 val default : t
 
 (** Write out waveforms to the directory specified *)
-val to_directory : string -> t
+val to_directory : ?here:Stdlib.Lexing.position -> string -> t
 
 (** Write out waveforms to the current working directory of the test *)
-val to_test_directory : t
+val to_test_directory : ?here:Stdlib.Lexing.position -> unit -> t
 
 (** Write out waveforms to the directory specified by the WAVES_PREFIX environment
     variable. *)
-val to_env_directory : unit -> t
+val to_env_directory : ?here:Stdlib.Lexing.position -> unit -> t
 
 (** Write out waveforms to $HOME/[subdirectory] where [subdirectory] defaults to "waves" *)
-val to_home_subdirectory : ?subdirectory:string -> unit -> t
+val to_home_subdirectory
+  :  ?subdirectory:string
+  -> ?here:Stdlib.Lexing.position
+  -> unit
+  -> t
 
 (** Always include line numbers in the waveform filename even if a test name is specified. *)
 val with_always_include_line_numbers : t -> t
@@ -52,7 +56,7 @@ val with_extra_cycles_after_test : t -> n:int -> t
 val as_wavefile_format : t -> format:Wavefile_format.t -> t
 
 (** Load the settings from a sexp file *)
-val load_sexp : string -> t
+val load_sexp : ?here:Stdlib.Lexing.position -> string -> t
 
 module Getters : sig
   val extra_cycles_after_test : t -> int

@@ -34,23 +34,33 @@ type t =
 [@@deriving sexp]
 
 let default = No_waves
-let to_directory s = Prefix { directory = s; config = Wave_details.default }
-let to_test_directory = to_directory "./"
 
-let to_env_directory () =
-  Sys.getenv "WAVES_PREFIX"
-  |> Option.value_exn ~message:"WAVES_PREFIX was not set"
-  |> to_directory
+let to_directory ?(here = Stdlib.Lexing.dummy_pos) s =
+  ();
+  let s = if String.is_suffix s ~suffix:"/" then s else s ^ "/" in
+  Prefix { directory = s; config = Wave_details.default }
 ;;
 
-let to_home_subdirectory ?(subdirectory = "waves/") () =
+let to_test_directory ?(here = Stdlib.Lexing.dummy_pos) () =
+  ();
+  to_directory ~here "./"
+;;
+
+let to_env_directory ?(here = Stdlib.Lexing.dummy_pos) () =
+  ();
+  Sys.getenv "WAVES_PREFIX"
+  |> Option.value_exn ~message:"WAVES_PREFIX was not set"
+  |> to_directory ~here
+;;
+
+let to_home_subdirectory ?(subdirectory = "waves/") ?(here = Stdlib.Lexing.dummy_pos) () =
   ();
   let home_dir =
     Sys.getenv "HOME"
     |> Option.value_exn
          ~message:"HOME environment variable is not set so we cannot serialize waveforms"
   in
-  sprintf "%s/%s/" home_dir subdirectory |> to_directory
+  sprintf "%s/%s/" home_dir subdirectory |> to_directory ~here
 ;;
 
 let rewrite ~f t =
@@ -71,7 +81,10 @@ let as_wavefile_format t ~format =
   rewrite ~f:(fun config -> { config with wavefile_format = format }) t
 ;;
 
-let load_sexp filename = Sexp.load_sexp_conv_exn filename t_of_sexp
+let load_sexp ?(here = Stdlib.Lexing.dummy_pos) filename =
+  ();
+  Sexp.load_sexp_conv_exn filename t_of_sexp
+;;
 
 module Getters = struct
   let extra_cycles_after_test = function
