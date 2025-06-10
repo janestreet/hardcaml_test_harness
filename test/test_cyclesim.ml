@@ -26,7 +26,7 @@ let%expect_test "no waves test" =
     ());
   Bench.run
     ~random_initial_state:`All
-    ~waves_config:Waves_config.default
+    ~waves_config:Waves_config.no_waves
     ~create
     (fun ~inputs ~outputs:_ sim ->
        inputs.a := Bits.zero 64;

@@ -34,7 +34,7 @@ let%expect_test "no waves test" =
   Bench.run ~random_initial_state:`All ~create testbench;
   Bench.run
     ~random_initial_state:`All
-    ~waves_config:Waves_config.default
+    ~waves_config:Waves_config.no_waves
     ~create
     testbench;
   [%expect {| |}]

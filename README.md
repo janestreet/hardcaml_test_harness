@@ -14,7 +14,7 @@ See `src/waves_config.mli` for the full up-to-date API.
 ```ocaml
 
 (* Do not save any waves *)
-let waves_config = Waves_config.default
+let waves_config = Waves_config.no_waves
 
 (* Save waves to the current working directory of the test *)
 let waves_config = Waves_config.to_test_directory ()

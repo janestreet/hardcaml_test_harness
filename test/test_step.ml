@@ -25,7 +25,7 @@ let%expect_test "no waves test" =
     return ());
   Bench.run
     ~random_initial_state:`All
-    ~waves_config:Waves_config.default
+    ~waves_config:Waves_config.no_waves
     ~create
     (fun () ->
        let open Bench.Step.Let_syntax in

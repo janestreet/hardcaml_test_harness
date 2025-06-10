@@ -18,6 +18,10 @@ type 'a with_test_config =
            [`Regs] randomizes registers only. *)
   -> ?trace:[ `All_named | `Everything | `Ports_only ]
   -> ?handle_multiple_waveforms_with_same_test_name:[ `Save_all | `Save_last_only ]
+       (** When using procedurally generated names, it can be useful to give a batch of
+           tests a prefix. Particularly when a design is functorized over some parameter
+           E.g, axi64_$[{test_name}]. This prefix allows that. *)
+  -> ?test_name_prefix:string
        (** If multiple tests are run with the same test-name / line number, whether to
            save all of the waveforms (with indices added) or only save waves for the last
            test that runs. *)

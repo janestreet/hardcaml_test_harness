@@ -12,6 +12,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?random_initial_state
     ?trace
     ?handle_multiple_waveforms_with_same_test_name
+    ?test_name_prefix
     ?test_name
     ?print_waves_after_test
     ?input_default
@@ -25,6 +26,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
       ?random_initial_state
       ?trace
       ?handle_multiple_waveforms_with_same_test_name
+      ?test_name_prefix
       ?test_name
       ?print_waves_after_test
       ~cycle_fn:Cyclesim.cycle
@@ -48,6 +50,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?random_initial_state
     ?trace
     ?handle_multiple_waveforms_with_same_test_name
+    ?test_name_prefix
     ?test_name
     ?print_waves_after_test
     ?input_default
@@ -61,6 +64,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
       ?random_initial_state
       ?trace
       ?handle_multiple_waveforms_with_same_test_name
+      ?test_name_prefix
       ?test_name
       ?print_waves_after_test
       ?input_default
