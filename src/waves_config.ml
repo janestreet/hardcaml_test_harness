@@ -33,7 +33,7 @@ type t =
       }
 [@@deriving sexp]
 
-let default = No_waves
+let no_waves = No_waves
 
 let to_directory ?(here = Stdlib.Lexing.dummy_pos) s =
   ();

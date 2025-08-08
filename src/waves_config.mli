@@ -18,7 +18,7 @@ module Wave_details : sig
   [@@deriving sexp]
 end
 
-type t =
+type t = private
   | No_waves
   | Prefix of
       { directory : string
@@ -27,7 +27,7 @@ type t =
 [@@deriving sexp]
 
 (** Do not write out waveforms *)
-val default : t
+val no_waves : t
 
 (** Write out waveforms to the directory specified *)
 val to_directory : ?here:Stdlib.Lexing.position -> string -> t
