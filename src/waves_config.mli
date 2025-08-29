@@ -24,6 +24,10 @@ type t = private
       { directory : string
       ; config : Wave_details.t
       }
+  | File of
+      { filename : string
+      ; config : Wave_details.t
+      }
 [@@deriving sexp]
 
 (** Do not write out waveforms *)
@@ -31,6 +35,9 @@ val no_waves : t
 
 (** Write out waveforms to the directory specified *)
 val to_directory : ?here:Stdlib.Lexing.position -> string -> t
+
+(** Write out waveform to the file specified *)
+val to_file : string -> t
 
 (** Write out waveforms to the current working directory of the test *)
 val to_test_directory : ?here:Stdlib.Lexing.position -> unit -> t

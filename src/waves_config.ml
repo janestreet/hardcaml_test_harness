@@ -31,6 +31,10 @@ type t =
       { directory : string
       ; config : Wave_details.t
       }
+  | File of
+      { filename : string
+      ; config : Wave_details.t
+      }
 [@@deriving sexp]
 
 let no_waves = No_waves
@@ -40,6 +44,8 @@ let to_directory ?(here = Stdlib.Lexing.dummy_pos) s =
   let s = if String.is_suffix s ~suffix:"/" then s else s ^ "/" in
   Prefix { directory = s; config = Wave_details.default }
 ;;
+
+let to_file filename = File { filename; config = Wave_details.default }
 
 let to_test_directory ?(here = Stdlib.Lexing.dummy_pos) () =
   ();
@@ -67,6 +73,7 @@ let rewrite ~f t =
   match t with
   | No_waves -> No_waves
   | Prefix { directory; config } -> Prefix { directory; config = f config }
+  | File { filename; config } -> File { filename; config = f config }
 ;;
 
 let with_always_include_line_numbers =
@@ -89,6 +96,7 @@ let load_sexp ?(here = Stdlib.Lexing.dummy_pos) filename =
 module Getters = struct
   let extra_cycles_after_test = function
     | No_waves -> 0
-    | Prefix { config = { extra_cycles_after_test; _ }; _ } -> extra_cycles_after_test
+    | Prefix { config = { extra_cycles_after_test; _ }; _ }
+    | File { config = { extra_cycles_after_test; _ }; _ } -> extra_cycles_after_test
   ;;
 end
