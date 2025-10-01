@@ -86,6 +86,7 @@ let run
     | Waves_config.No_waves -> None
     | Prefix { directory; config = { always_include_line_number; wavefile_format; _ } } ->
       of_prefix ~always_include_line_number ~format:wavefile_format directory |> Some
+    | File { filename; _ } -> Some filename
   in
   let sim_config =
     let base =
@@ -113,7 +114,8 @@ let run
   let wave_mode, save_fn =
     match waves_config with
     | No_waves -> Wave_mode.None, Fn.ignore
-    | Prefix { config = { wavefile_format = Hardcamlwaveform; _ }; _ } ->
+    | Prefix { config = { wavefile_format = Hardcamlwaveform; _ }; _ }
+    | File { config = { wavefile_format = Hardcamlwaveform; _ }; _ } ->
       (* This is safe because [serialize_waves_to] is only None in the [No_waves] case *)
       let serialize_waves_to = Option.value_exn serialize_waves_to in
       let save_hardcamlwaveform =
@@ -122,7 +124,8 @@ let run
           Hardcaml_waveterm.Waveform.Serialize.marshall waves serialize_waves_to)
       in
       Wave_mode.Hardcamlwaveform, save_hardcamlwaveform
-    | Prefix { config = { wavefile_format = Vcd; _ }; _ } ->
+    | Prefix { config = { wavefile_format = Vcd; _ }; _ }
+    | File { config = { wavefile_format = Vcd; _ }; _ } ->
       (* This is safe because [serialize_waves_to] is only None in the [No_waves] case *)
       let serialize_waves_to = Option.value_exn serialize_waves_to in
       let out_channel = Out_channel.create serialize_waves_to in
