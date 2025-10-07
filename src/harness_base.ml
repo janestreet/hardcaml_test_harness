@@ -8,6 +8,7 @@ type 'a with_test_config =
   -> ?random_initial_state:[ `All | `Mems | `Regs | `None ]
   -> ?trace:[ `All_named | `Everything | `Ports_only ]
   -> ?handle_multiple_waveforms_with_same_test_name:[ `Save_all | `Save_last_only ]
+  -> ?test_name_prefix:string
   -> ?test_name:string
   -> ?print_waves_after_test:(Waveform.t -> unit)
   -> 'a
@@ -20,10 +21,11 @@ let global_already_used_filenames = Hashtbl.create (module String)
 let run
   (type sim)
   ~(here : [%call_pos])
-  ?(waves_config : Waves_config.t = Waves_config.default)
+  ?(waves_config : Waves_config.t = Waves_config.no_waves)
   ?(random_initial_state = `None)
   ?(trace = `Ports_only)
   ?(handle_multiple_waveforms_with_same_test_name = `Save_all)
+  ?test_name_prefix
   ?test_name
   ?(print_waves_after_test : (Waveform.t -> unit) option)
   ~(cycle_fn : sim -> unit)
@@ -55,7 +57,15 @@ let run
           if always_include_line_number then line_number ^ "_" ^ name else name)
         |> Common.sanitize_test_name
       in
-      let basename = prefix ^ filename ^ "_" ^ test_identifier in
+      let basename =
+        prefix
+        ^ filename
+        ^ "_"
+        ^ (match test_name_prefix with
+           | Some t -> [%string "%{t#String}_"]
+           | None -> "")
+        ^ test_identifier
+      in
       (* Handle repetitions in basename if [Save_all] is set *)
       let suffix =
         match handle_multiple_waveforms_with_same_test_name with
@@ -76,6 +86,7 @@ let run
     | Waves_config.No_waves -> None
     | Prefix { directory; config = { always_include_line_number; wavefile_format; _ } } ->
       of_prefix ~always_include_line_number ~format:wavefile_format directory |> Some
+    | File { filename; _ } -> Some filename
   in
   let sim_config =
     let base =
@@ -103,7 +114,8 @@ let run
   let wave_mode, save_fn =
     match waves_config with
     | No_waves -> Wave_mode.None, Fn.ignore
-    | Prefix { config = { wavefile_format = Hardcamlwaveform; _ }; _ } ->
+    | Prefix { config = { wavefile_format = Hardcamlwaveform; _ }; _ }
+    | File { config = { wavefile_format = Hardcamlwaveform; _ }; _ } ->
       (* This is safe because [serialize_waves_to] is only None in the [No_waves] case *)
       let serialize_waves_to = Option.value_exn serialize_waves_to in
       let save_hardcamlwaveform =
@@ -112,7 +124,8 @@ let run
           Hardcaml_waveterm.Waveform.Serialize.marshall waves serialize_waves_to)
       in
       Wave_mode.Hardcamlwaveform, save_hardcamlwaveform
-    | Prefix { config = { wavefile_format = Vcd; _ }; _ } ->
+    | Prefix { config = { wavefile_format = Vcd; _ }; _ }
+    | File { config = { wavefile_format = Vcd; _ }; _ } ->
       (* This is safe because [serialize_waves_to] is only None in the [No_waves] case *)
       let serialize_waves_to = Option.value_exn serialize_waves_to in
       let out_channel = Out_channel.create serialize_waves_to in

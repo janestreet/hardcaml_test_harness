@@ -18,19 +18,26 @@ module Wave_details : sig
   [@@deriving sexp]
 end
 
-type t =
+type t = private
   | No_waves
   | Prefix of
       { directory : string
       ; config : Wave_details.t
       }
+  | File of
+      { filename : string
+      ; config : Wave_details.t
+      }
 [@@deriving sexp]
 
 (** Do not write out waveforms *)
-val default : t
+val no_waves : t
 
 (** Write out waveforms to the directory specified *)
 val to_directory : here:[%call_pos] -> string -> t
+
+(** Write out waveform to the file specified *)
+val to_file : string -> t
 
 (** Write out waveforms to the current working directory of the test *)
 val to_test_directory : here:[%call_pos] -> unit -> t
