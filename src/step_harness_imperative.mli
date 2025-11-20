@@ -5,8 +5,8 @@ module Make_monadic (I : Interface.S) (O : Interface.S) : sig
   module Sim : module type of Cyclesim.With_interface (I) (O)
 
   (*_ We expose the Step module for consistency with the functional version and to improve
-    the abstraction here, even though it is not strictly necessary since it isn't
-    functorized over I/O *)
+      the abstraction here, even though it is not strictly necessary since it isn't
+      functorized over I/O *)
   module Step : Imperative.M(Imperative.Cyclesim.Step_modules).S
 
   val run
@@ -30,8 +30,8 @@ module Make_effectful (I : Interface.S) (O : Interface.S) : sig
   module Sim : module type of Cyclesim.With_interface (I) (O)
 
   (*_ We expose the Step module for consistency with the functional version and to improve
-    the abstraction here, even though it is not strictly necessary since it isn't
-    functorized over I/O *)
+      the abstraction here, even though it is not strictly necessary since it isn't
+      functorized over I/O *)
   module Step : Imperative.M(Imperative.Cyclesim.Step_modules).S
 
   val run

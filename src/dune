@@ -6,4 +6,4 @@
    hardcaml_step_testbench hardcaml_step_testbench.effectful
    hardcaml_waveterm)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_jane ppx_hardcaml)))
