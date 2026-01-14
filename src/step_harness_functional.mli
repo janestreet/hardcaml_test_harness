@@ -1,7 +1,7 @@
 open Hardcaml
 
 module Make_monadic (I : Interface.S) (O : Interface.S) : sig
-  open Hardcaml_step_testbench
+  open Hardcaml_step_testbench.Monadic
   module Sim : module type of Cyclesim.With_interface (I) (O)
   module Step : Functional.Cyclesim.M(I)(O).S
 
@@ -24,7 +24,7 @@ module Make_monadic (I : Interface.S) (O : Interface.S) : sig
 end
 
 module Make_effectful (I : Interface.S) (O : Interface.S) : sig
-  open Hardcaml_step_testbench_effectful
+  open Hardcaml_step_testbench.Effectful
   module Sim : module type of Cyclesim.With_interface (I) (O)
   module Step : Functional.Cyclesim.M(I)(O).S
 
