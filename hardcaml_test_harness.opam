@@ -13,15 +13,16 @@ build: [
 depends: [
   "ocaml" {>= "5.1.0"}
   "core"
-  "expect_test_helpers_core"
+  "expect_test_helpers_base"
   "hardcaml"
+  "hardcaml_lws"
   "hardcaml_step_testbench"
   "hardcaml_waveterm"
   "ppx_hardcaml"
   "ppx_jane"
   "dune"                     {>= "3.17.0"}
 ]
-available: arch != "arm32" & arch != "x86_32"
+available: arch != "x86_32"
 synopsis: "A standardized test harness for Hardcaml"
 description: "
 hardcaml_test_harness helps with common boilerplate when writing Hardcaml tests
