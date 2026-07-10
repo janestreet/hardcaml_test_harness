@@ -21,7 +21,7 @@ module Bench = Lws_harness.Make (I) (O)
 
 type sim_context = Lws_context.M(I)(O).t
 
-module%test [@tags "runtime5-only"] _ = struct
+module%test _ = struct
   let testbench (h @ local) ~inputs:(i : _ I.t) ~outputs:_ =
     let open Bits in
     i.a <--. 4;

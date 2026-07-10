@@ -10,6 +10,7 @@ module Make (I : Interface.S) (O : Interface.S) : sig
 
   val run
     : (?timeout:int
+       -> ?config:Hardcaml_lws.Lws.Config.t
        -> create:(Scope.t -> Signal.t I.t -> Signal.t O.t)
        -> (Lws.Handler.t @ local
            -> inputs:Bits.t ref I.t
@@ -22,6 +23,7 @@ module Make (I : Interface.S) (O : Interface.S) : sig
       refs. *)
   val run_advanced
     : (?timeout:int
+       -> ?config:Hardcaml_lws.Lws.Config.t
        -> create:(Scope.t -> Signal.t I.t -> Signal.t O.t)
        -> (Lws.Handler.t @ local -> sim_context -> 'a)
        -> 'a)

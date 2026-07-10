@@ -28,7 +28,7 @@ let testbench h ~inputs:(i : _ I.t) ~outputs:_ =
   Bench.Step.cycle h
 ;;
 
-let%expect_test ("no waves test" [@tags "runtime5-only"]) =
+let%expect_test "no waves test" =
   Bench.run ~random_initial_state:`All ~create testbench;
   Bench.run
     ~random_initial_state:`All
@@ -38,7 +38,7 @@ let%expect_test ("no waves test" [@tags "runtime5-only"]) =
   [%expect {| |}]
 ;;
 
-let%expect_test ("prefix test (with test name and line numbers)" [@tags "runtime5-only"]) =
+let%expect_test "prefix test (with test name and line numbers)" =
   Bench.run
     ~random_initial_state:`All
     ~waves_config:

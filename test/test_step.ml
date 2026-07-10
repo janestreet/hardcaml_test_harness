@@ -18,7 +18,7 @@ let create _scope { I.a; b } = { O.s = Signal.( +: ) a b }
 
 module Bench = Step_harness.Functional.Make (I) (O)
 
-let%expect_test ("no waves test" [@tags "runtime5-only"]) =
+let%expect_test "no waves test" =
   Bench.run ~random_initial_state:`All ~create (fun h ->
     Bench.Step.delay h { I.a = Bits.zero 64; b = Bits.zero 64 });
   Bench.run
@@ -29,7 +29,7 @@ let%expect_test ("no waves test" [@tags "runtime5-only"]) =
   [%expect {| |}]
 ;;
 
-let%expect_test ("prefix test" [@tags "runtime5-only"]) =
+let%expect_test "prefix test" =
   Bench.run
     ~random_initial_state:`All
     ~waves_config:(Waves_config.to_directory "/tmp/")
@@ -38,7 +38,7 @@ let%expect_test ("prefix test" [@tags "runtime5-only"]) =
   [%expect {| Saved waves to /tmp/test_step_ml_prefix_test.hardcamlwaveform |}]
 ;;
 
-let%expect_test ("prefix test (with test name)" [@tags "runtime5-only"]) =
+let%expect_test "prefix test (with test name)" =
   Bench.run
     ~random_initial_state:`All
     ~waves_config:(Waves_config.to_directory "/tmp/")
@@ -48,7 +48,7 @@ let%expect_test ("prefix test (with test name)" [@tags "runtime5-only"]) =
   [%expect {| Saved waves to /tmp/test_step_ml_hello_world.hardcamlwaveform |}]
 ;;
 
-let%expect_test ("prefix test (with test name and line numbers)" [@tags "runtime5-only"]) =
+let%expect_test "prefix test (with test name and line numbers)" =
   Bench.run
     ~random_initial_state:`All
     ~waves_config:
@@ -59,7 +59,7 @@ let%expect_test ("prefix test (with test name and line numbers)" [@tags "runtime
   [%expect {| Saved waves to /tmp/test_step_ml_52_hello_world.hardcamlwaveform |}]
 ;;
 
-let%expect_test ("vcd test" [@tags "runtime5-only"]) =
+let%expect_test "vcd test" =
   Bench.run
     ~random_initial_state:`All
     ~waves_config:

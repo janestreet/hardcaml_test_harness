@@ -20,6 +20,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?run_interactive
     ?clock_mode
     ?timeout
+    ?(config = { Lws.Config.default with timeout })
     ~create
     testbench
     =
@@ -44,7 +45,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
         in
         let lws =
           L.create
-            ~config:{ Lws.Config.default with timeout }
+            ~config
             ~backend_specific_config:
               { Lws_cyclesim.Backend_specific_config.default with
                 waves = always_wrap_waveterm || wave_mode_is_some
@@ -71,6 +72,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
     ?run_interactive
     ?clock_mode
     ?timeout
+    ?config
     ~create
     testbench
     =
@@ -86,6 +88,7 @@ module Make (I : Interface.S) (O : Interface.S) = struct
       ?run_interactive
       ?clock_mode
       ?timeout
+      ?config
       ~create
       (fun h sim_context ->
          let inputs = sim_context.inputs in
