@@ -1,6 +1,7 @@
 (library
  (name hardcaml_step_test_harness_test)
- (libraries core hardcaml hardcaml_lws hardcaml_test_harness
-   hardcaml_waveterm stdio core_unix.sys_unix)
+ (libraries core core_unix core_unix.filename_unix hardcaml hardcaml_lws
+   hardcaml_test_harness hardcaml_verilator hardcaml_waveterm stdio
+   core_unix.sys_unix)
  (preprocess
   (pps ppx_hardcaml ppx_jane)))

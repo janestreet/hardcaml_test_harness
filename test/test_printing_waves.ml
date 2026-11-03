@@ -22,7 +22,7 @@ let%expect_test "printed waveforms test" =
   Bench.run
     ~create
     ~print_waves_after_test:
-      (Hardcaml_waveterm.Waveform.print ~display_width:40 ~display_height:8 ~wave_width:2)
+      (Hardcaml_waveterm.Waveform.print ~display_width:40 ~display_height:8 ~wave_scale:2)
     (fun ~inputs ~outputs:_ sim ->
        inputs.a := Bits.gnd;
        inputs.b := Bits.gnd;

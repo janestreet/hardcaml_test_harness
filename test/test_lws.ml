@@ -58,7 +58,7 @@ module%test _ = struct
         (Hardcaml_waveterm.Waveform.print
            ~display_width:40
            ~display_height:8
-           ~wave_width:2)
+           ~wave_scale:2)
       (fun (h @ local) ~inputs:(i : _ I.t) ~outputs:_ ->
          let open Bits in
          i.a <--. 0;
@@ -79,6 +79,105 @@ module%test _ = struct
       │        ││──────┬─────┬───────────    │
       │b       ││ 0000 │0004 │0014           │
       │        ││──────┴─────┴───────────    │
+      └────────┘└────────────────────────────┘
+      |}]
+  ;;
+
+  let external_add_verilog =
+    "module external_add(input wire [15:0] a, input wire [15:0] b, output wire [15:0] \
+     s); assign s = a + b; endmodule\n"
+  ;;
+
+  let with_temp_verilog verilog ~f =
+    let source = Filename_unix.temp_file "lws-external" ".v" in
+    Exn.protect
+      ~f:(fun () ->
+        Out_channel.write_all source ~data:verilog;
+        f source)
+      ~finally:(fun () -> Core_unix.unlink source)
+  ;;
+
+  let external_create _scope { I.a; b } =
+    let s =
+      Instantiation.create
+        ()
+        ~name:"external_add"
+        ~inputs:[ "a", a; "b", b ]
+        ~outputs:[ "s", 16 ]
+      |> Instantiation.outputs
+      |> Map.find_exn _ "s"
+    in
+    { O.s }
+  ;;
+
+  let run_external_add ~backend () =
+    with_temp_verilog external_add_verilog ~f:(fun source ->
+      Bench.run
+        ~backend_specific_config:
+          { Lws_cyclesim.Backend_specific_config.default with
+            simulation_backend = backend source
+          }
+        ~create:external_create
+        ~print_waves_after_test:
+          (Hardcaml_waveterm.Waveform.print
+             ~display_width:40
+             ~display_height:12
+             ~wave_scale:2)
+        (fun (h @ local) ~inputs:(i : _ I.t) ~outputs ->
+          let open Bits in
+          i.a <--. 3;
+          i.b <--. 4;
+          Lws.step h;
+          printf "sum = %d\n" (to_unsigned_int !(outputs.after_edge.s))))
+  ;;
+
+  let%expect_test "Verilator backend with external Verilog and waves" =
+    run_external_add
+      ~backend:(fun source ->
+        Verilator
+          { cache = No_cache
+          ; config =
+              { Lws_cyclesim.Backend_specific_config.Verilator_config.default with
+                extra_verilog_files = [ source ]
+              }
+          })
+      ();
+    [%expect
+      {|
+      sum = 7
+      ┌Signals─┐┌Waves───────────────────────┐
+      │        ││────────────                │
+      │a       ││ 0003                       │
+      │        ││────────────                │
+      │        ││────────────                │
+      │b       ││ 0004                       │
+      │        ││────────────                │
+      │        ││────────────                │
+      │s       ││ 0007                       │
+      │        ││────────────                │
+      │        ││                            │
+      └────────┘└────────────────────────────┘
+      |}]
+  ;;
+
+  let%expect_test "Hardcaml_of_verilog backend with external Verilog" =
+    run_external_add
+      ~backend:(fun source -> Hardcaml_of_verilog { extra_verilog_files = [ source ] })
+      ();
+    [%expect
+      {|
+      sum = 7
+      ┌Signals─┐┌Waves───────────────────────┐
+      │        ││────────────                │
+      │a       ││ 0003                       │
+      │        ││────────────                │
+      │        ││────────────                │
+      │b       ││ 0004                       │
+      │        ││────────────                │
+      │        ││────────────                │
+      │s       ││ 0007                       │
+      │        ││────────────                │
+      │        ││                            │
       └────────┘└────────────────────────────┘
       |}]
   ;;

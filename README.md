@@ -1,5 +1,4 @@
-"Hardcaml Test Harness"
-=======================
+# Hardcaml Test Harness
 
 `Hardcaml_test_harness` helps with common boilerplate when writing Hardcaml tests using
 Cyclesim or the Step test library. The harness handles constructing a test environment
